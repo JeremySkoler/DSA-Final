@@ -84,16 +84,17 @@ def resource_allocation(animalList, resources):
     #         animalsIncluded.append(currentAnimal.name)
     #         weightTracker -= currentAnimal.weight     #Account for added animal's weight
     #     aniTracker -= 1
+
+
     res = []
     names = []
     for animal in animalList:
         names.append(animal.name)
         res.append(animal.resources)
 
-
-
     plt.bar(range(len(animalList)), res, tick_label = names)
     plt.show()
+
 
 
     return (dp[resources][anm_count-1])
