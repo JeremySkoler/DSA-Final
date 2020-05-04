@@ -19,7 +19,10 @@ class Animal:
         self.resources = 0
 
     def get_survival_rate(self, resources):
-        survival_chance = (self.survivial_params[0]*math.sqrt(resources/self.survivial_params[1])+self.survivial_params[2])
+        # survival_chance = (self.survivial_params[0]*math.sqrt(resources/self.survivial_params[1])+self.survivial_params[2])
+        a = self.survivial_params[0]
+        b = self.survivial_params[1]
+        survival_chance = a/(1+((resources*b)+0.5)**2)+1
         return survival_chance
 
     def get_value(self, resources):
@@ -36,12 +39,10 @@ class Animal:
 def resource_allocation(animalList, resources):
     ''' Find optimal subset of animals to maximize the total value while remaining
      within the resources limit
-
     Args
     -----------
     animalList (list) = List of animal objects to evaluate
     resources (int or float) = Maximum resources any subset's resourcess can sum to
-
     Returns
     -----------
     animalsIncluded (list) = List of animal names included in optimal subset
@@ -104,18 +105,21 @@ def test_optimality(animals, res, n):
         for j in range(n):
             animal_survives = random.random() < prob # find out if animal survivies (random)
             if animal_survives:
-                #print(a.name)
+                # print(a.name)
                 value += a.value_constant # add animal's value to total value
     return value/n
 
 # Arbitrary animals
-cow = Animal ('cow', [0.5, 20, 0.5], 8)
-cat = Animal ('cat', [0.1, 10, 0.7], 5)
-mouse = Animal ('mouse', [0.3, 20, 0.4], 7)
-elephant = Animal ('elephant', [0.5, 30, 0.1], 4)
-horse = Animal('horse', [1, 20, 0.3], 2)
-beardedDragon = Animal('bDragon', [0.5, 10, 0.4], 2)
+cow = Animal ('cow', [0.9, -1.25], 4)
+cat = Animal ('cat', [0.3, -1.25], 1)
+mouse = Animal ('mouse', [0.3, -0.6], 1) # should not be given much money
+elephant = Animal ('elephant', [0.3, -1.25], 5)
+horse = Animal('horse', [0.6, -0.1], 2)
+beardedDragon = Animal('dragon', [0.6, -0.6], 4)
 
 testList = [cow, cat, mouse, elephant, horse, beardedDragon]
 
-print(test_optimality(testList, resource_allocation(testList,90), 2))
+res, value = resource_allocation(testList,7)
+print(res, value)            #Arbitrary weight
+
+print("Average Value test:", test_optimality(testList, res, 10))

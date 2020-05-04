@@ -117,22 +117,6 @@ def resource_allocation(animalList, resources):
     return res
 
 
-def test_optimality(animals, res, n):
-    """ does several random simulations of which animals live and die
-    animals = list of animals objects
-    res = result list of money allocated
-    n = number of random iterations
-    """
-    value = 0
-    for i in range(len(animals)):
-        a = animals[i]
-        prob = a.get_survival_rate(res[i]) # find probability each animal will survive
-        # print(prob)
-        for j in range(n):
-            animal_survives = random.random() <= prob # find out if animal survivies (random)
-            if animal_survives:
-                value += a.value_constant # add animal's value to total value
-    return value/n
 
 # Arbitrary animals
 cow = Animal ('cow', [0.5, 20, 0.5], 8)
