@@ -2,6 +2,7 @@ import math
 import random
 import numpy as np
 import matplotlib.pyplot as plt
+import matplotlib.animation as animation
 
 class Animal:
     ''' Creates an animal'''
@@ -17,6 +18,9 @@ class Animal:
         self.survivial_params = survival_params # [0.5 (0-1), 2, 0.2 (starting survival probability, between 0-1)]
         self.value_constant = value_constant
         self.resources = 0
+        self.resource_hist = [0]
+        self.SC_hist = [self.get_survival_rate(0)]
+        self.TV_hist = [self.get_value(0)]
 
     def get_survival_rate(self, resources):
         survival_chance = (self.survivial_params[0]*math.sqrt(resources/self.survivial_params[1])+self.survivial_params[2])
@@ -105,30 +109,103 @@ def resource_allocation(animalList, resources):
         biodiversity = (biodiversity/lucky_duck.get_survival_rate(lucky_duck.resources)) * lucky_duck.get_survival_rate(lucky_duck.resources+1)
         lucky_duck.resources += 1
 
+        for animal in animalList:
+            animal.resource_hist.append(animal.resources)
+            animal.SC_hist.append(animal.get_survival_rate(animal.resources))
+            animal.TV_hist.append(animal.get_value(animal.resources))
 
     res = []
     names = []
     for animal in animalList:
         names.append("%s: %.2f" % (animal.name, animal.get_survival_rate(animal.resources)))
         res.append(animal.resources)
-    plt.bar(range(len(animalList)), res, tick_label = names)
-    plt.show()
+    #plt.bar(range(len(animalList)), res, tick_label = names)
+    #plt.show()
 
     return res
 
 
 
 # Arbitrary animals
-cow = Animal ('cow', [0.5, 20, 0.5], 8)
-cat = Animal ('cat', [0.1, 10, 0.7], 5)
-mouse = Animal ('mouse', [0.3, 20, 0.4], 7)
-elephant = Animal ('elephant', [0.5, 30, 0.1], 4)
-horse = Animal('horse', [1, 20, 0.3], 2)
-beardedDragon = Animal('bDragon', [0.5, 10, 0.4], 2)
+pBear = Animal ('Polar Bear', [0.5, 20, 0.2], 8)
+sHorse = Animal ('Seahorse', [0.2, 10, 0.7], 4)
+raccoon = Animal ('Raccoon', [0.3, 20, 0.4], 7)
+elephant = Animal ('Elephant', [0.4, 30, 0.5], 3)
+sMonkey = Animal('Spider Monkey', [1, 20, 0.3], 2)
+bDragon = Animal('Bearded Dragon', [0.5, 10, 0.4], 4)
+leech = Animal('Leech', [0.6, 40, 0.2], 5)
 
-testList = [cow, cat, mouse, elephant, horse, beardedDragon]
+testList = [pBear, sHorse, raccoon, elephant, sMonkey, bDragon, leech]
 
 ## Animals start thriving when the # of total resources is a factor
 ## of 10 bigger than the animals' approximate survival_params[1]
+resource_allocation(testList,200)
 
-resource_allocation(testList,100)
+
+
+
+
+#
+#
+#
+#
+# elephantX = eRes
+# dragonX = dRes
+# elephantY = []
+# dragonY = []
+# for x in elephantX:
+#     temp = 0.5*math.sqrt(x/30)+0.1
+#     elephantY.append(temp)
+# for x in dragonX:
+#     temp = 0.5*math.sqrt(x/10)+0.4
+#     dragonY.append(temp)
+# # elephantY = 0.5*math.sqrt(elephantX/30)+0.1
+# # dragonY = 0.5*math.sqrt(dragonX/10)+0.4
+#
+# x1 = np.linspace(0, 10, 100)
+# y1 = np.cos(x)
+
+
+fig, ax = plt.subplots()
+lines = []
+Xs = []
+Ys = []
+legend = []
+colors = ['b','g','r','c','m','k','y']
+i = 0
+for animal in testList:
+    Xs.append(animal.resource_hist)
+    Ys.append(animal.SC_hist)
+    line, = ax.plot(animal.resource_hist, animal.SC_hist, colors[i])
+    lines.append(line)
+    legend.append(animal.name)
+    i += 1
+
+# line, = ax.plot(elephantX, elephantY, color='k')
+# line1, = ax.plot(dragonX, dragonY, color='b')
+
+
+def update(num, Xs, Ys, lines):
+    for i in range(len(Xs)):
+        lines[i].set_data(Xs[i][:num], Ys[i][:num])
+        lines[i].axes.axis([0, 60, 0, 1.1])
+    return lines
+
+ani = animation.FuncAnimation(fig, update, fargs=[Xs, Ys, lines],
+                              interval=45, blit=True)
+plt.plot([-5,65],[1,1],'-.r')
+plt.title('Survival chance as resources are allocated')
+plt.ylabel('Survivial Chance')
+plt.xlabel('Resources')
+plt.legend(legend, loc = 'lower right')
+plt.show()
+
+
+# def update(num, elephantX, elephantY, line, dragonX, dragonY, line1):
+#     line.set_data(elephantX[:num], elephantY[:num])
+#     line.axes.axis([0, 10, 0, 1])
+#     line1.set_data(dragonX[:num], dragonY[:num])
+#     line1.axes.axis([0, 10, 0, 1])
+#     return line, line1,
+#
+# plt.show()
