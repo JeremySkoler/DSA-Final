@@ -44,18 +44,16 @@ def resource_allocation(animalList, resources):
 
     Returns
     -----------
-    animalsIncluded (list) = List of animal names included in optimal subset
-    dp[resources][item] (float) = The maximized value achieved by optimal subset
+    res (list) = The resources allocated to each animal
+    names (lsit) = The names of each animal in the order their resource allocations
+                    appear in res
+
     '''
     anm_count = len(animalList)
-    dp = np.zeros((resources+1, anm_count))          #Matrix to hold subset values
 
-    totalValue = 0
+    init_val = 0
     for animal in animalList:
-        totalValue += animal.get_value(0)
-
-    for j in range(anm_count):
-        dp[0][j] = totalValue
+        init_val += animal.get_value(0)
 
     ## Biodiversity is the product of all the animal's survival rates
     biodiversity = 1
@@ -64,44 +62,44 @@ def resource_allocation(animalList, resources):
 
     ## ecosys is DP matrix stores ecosystem value
     ecosys = np.zeros((resources+1, anm_count))
-    ecosystem_value = totalValue * biodiversity     #resources-less eco val
+    ecosystem_value = init_val * biodiversity     #resources-less eco val
     for j in range(anm_count):
         ecosys[0][j] = ecosystem_value
 
-
+    ##Tracks Tval used in best solution in the last round of resource allocation
+    last_round_Tval = init_val
 
     for i in range(1,resources+1):
         where_dat_resource = 0      #Tracks where each additional resource is allocated
         a = animalList[0]           #Each animal option
 
         ## Update first column assuming resouce allocation
-        dp[i][0] = dp[i-1][-1] + (a.get_value(a.resources+1)-a.get_value(a.resources))
+        temp_Tval = last_round_Tval + (a.get_value(a.resources+1)-a.get_value(a.resources))
 
         ## Calculate new biodiversity and then ecosystem value
         temp_biodiversity = (biodiversity/a.get_survival_rate(a.resources)) * a.get_survival_rate(a.resources+1)
-        ecosys[i][0] = dp[i][0] * temp_biodiversity
+        ecosys[i][0] = temp_Tval * temp_biodiversity
 
         #Each potential 'remaining' resources
         for j in range(1, anm_count):
             a = animalList[j]
 
             # Potential total, biodiversity and ecosystem value with resource allocated to this animal
-            pot_Tvalue = dp[i-1][-1] + (a.get_value(a.resources+1)-a.get_value(a.resources))
+            pot_Tvalue = last_round_Tval + (a.get_value(a.resources+1)-a.get_value(a.resources))
             pot_bio = (biodiversity/a.get_survival_rate(a.resources)) * a.get_survival_rate(a.resources+1)
             pot_eco_val = pot_Tvalue * pot_bio
 
             # Potential better than last best?
             ecosys[i][j] = max(ecosys[i][j-1], pot_eco_val)
 
-            ## Notice ecosys determines the value stored in dp
-            ## dp now just data storage matrix (probably could replace with variable)
+            ## Save updated Tvalue for best solution so far this round
             if ecosys[i][j-1] < ecosys[i][j]:
-                dp[i][j] = pot_Tvalue
+                best_sofar_Tval = pot_Tvalue
                 where_dat_resource = j          #Track resource allocation location
-            else:
-                dp[i][j] = dp[i][j-1]
+
 
         ### variables updated
+        last_round_Tval = best_sofar_Tval
         lucky_duck = animalList[where_dat_resource]     #Animal given resource
         biodiversity = (biodiversity/lucky_duck.get_survival_rate(lucky_duck.resources)) * lucky_duck.get_survival_rate(lucky_duck.resources+1)
         lucky_duck.resources += 1
