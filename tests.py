@@ -29,8 +29,9 @@ mouse = Animal ('mouse', [0.3, 20, 0.4], 7)
 elephant = Animal ('elephant', [0.5, 30, 0.1], 4)
 horse = Animal('horse', [1, 20, 0.3], 2)
 beardedDragon = Animal('bDragon', [0.5, 10, 0.4], 2)
+mosquito = Animal('mosquito', [0.5, 10, 0.4], -2)
 
-testList = [cow, cat, mouse, elephant, horse, beardedDragon]
+testList = [cow, cat, mouse, elephant, horse, beardedDragon, mosquito]
 
 ## Animals start thriving when the # of total resources is a factor
 ## of 10 bigger than the animals' approximate survival_params[1]
