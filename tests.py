@@ -34,8 +34,9 @@ def test_correctness():
     list = [fish, penguin, seal]
     # penguin and seal are same except for value, so penguin should get more
     # fish is almost guarenteed to survive without anything, so it should
-    # not get any money unless there is a lot of money 
-    res = resource_allocation(list, 3)[0]
+    # not get any money unless there is a lot of money
+    res, names = resource_allocation(list, 3)
+    plot_results(res, names)
     assert res == [0, 2, 1], "Antarctic test failed"
     # fish gets 0, penguin gets 2, seal gets 1
 

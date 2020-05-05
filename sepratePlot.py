@@ -1,7 +1,8 @@
 import math
 import random
 import numpy as np
-import matplotlib.pyplot as plt
+# import matplotlib.pyplot as plt
+from matplotlib import pyplot as plt
 
 class Animal:
     ''' Creates an animal'''
@@ -120,6 +121,9 @@ def plot_results(res, names):
     """
     print("Plot results function running")
     plt.bar(range(len(res)), res, tick_label = names)
+    plt.xlabel("Animal and Chance of Survival")
+    plt.ylabel("Resources Allocated")
+    plt.title("Animals vs Resources Allocated")
     plt.show()
 
 # Arbitrary animals
