@@ -75,10 +75,10 @@ def resource_allocation(animalList, resources):
 
         ## Update first column assuming resouce allocation
         temp_Tval = last_round_Tval + (a.get_value(a.resources+1)-a.get_value(a.resources))
-
         ## Calculate new biodiversity and then ecosystem value
         temp_biodiversity = (biodiversity/a.get_survival_rate(a.resources)) * a.get_survival_rate(a.resources+1)
         ecosys[i][0] = temp_Tval * temp_biodiversity
+        best_sofar_Tval = temp_Tval
 
         #Each potential 'remaining' resources
         for j in range(1, anm_count):
