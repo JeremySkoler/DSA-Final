@@ -14,6 +14,7 @@ We chose a square root function, because this function has a high slope at the b
 
 
 <img src="https://github.com/JeremySkoler/DSA-Final/blob/master/report_images/survival_chance.png" width="500" height="auto" text-align="center" margin-left="20px"> </img>
+
 **Figure 1:** Graph of chance of survival vs resources allocated for different animals
 
 As the graph shows, some species reach a survival chance of 1 before all the resources are allocated. As we are dealing with probability, any number over 1 is invalid, as an event can never have more than a 100% chance of occuring. To account for this behavior, our algorithm will return 1 for any survival chance over one, which effectively makes the equation a piecewise function that never exceeds 1.
@@ -50,6 +51,7 @@ From this setup, we expected the fish to receive few if any resources, and for t
 
 
 <img src="https://github.com/JeremySkoler/DSA-Final/blob/master/report_images/antarctic_test.png" width="500" height="auto" text-align="center" margin-left="20px"> </img>
+
 **Figure 2:** Results for test using three Antarctic animals
 
 Next we ran a test on a list of six animals, using a resource amount of 100.
@@ -63,9 +65,11 @@ Next we ran a test on a list of six animals, using a resource amount of 100.
     beardedDragon = Animal('bDragon', [0.5, 10, 0.4], 2)
 
 <img src="https://github.com/JeremySkoler/DSA-Final/blob/master/report_images/test_list_visualization.png" width="500" height="auto" text-align="center" margin-left="20px"> </img>
+
 **Figure 3:** Visualization of survival curves and an allocation of resources for each animal
 
 <img src="https://github.com/JeremySkoler/DSA-Final/blob/master/report_images/test_list_results.png" width="500" height="auto" text-align="center" margin-left="20px"> </img>
+
 **Figure 4:** Results for test with six animals
 
 Overall, the algorithm worked as we expected. The algorithm allocated resources with a preference towards the animals with high value and/or low initial chance of survival, but also avoided allocating resources to just one or two animals.
@@ -80,6 +84,7 @@ After going through each animal, the algorithm returned the total value. When we
 
 
 <img src="https://github.com/JeremySkoler/DSA-Final/blob/master/report_images/resources_vs_value.png" width="500" height="auto" text-align="center" margin-left="20px"> </img>
+
 **Figure 5:** Resources vs value in simulation
 
 We created Figure 5 by varying the number of resources that the algorithm could use, and then running the simulation function. The result was a graph that showed how the resources allocated would affect the total value of the population. The graph shows that resources make more of a difference at the beginning, and that this particular system requires about 300 resources to consistently have all the animals survive.
